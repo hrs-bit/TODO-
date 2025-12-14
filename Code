@@ -2,16 +2,16 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define MAX_TASKS 100
-#define DESC_LENGTH 100
+#define Max 100       //max tsk
+#define DESCLENGTH 100
 
 typedef struct {
     int id;
-    char description[DESC_LENGTH];
+    char description[DESCLENGTH];
     int isCompleted; 
 } Task;
 
-Task todoList[MAX_TASKS];
+Task todoList[Max];
 int taskCount = 0;
 
 
@@ -58,14 +58,14 @@ int main() {
 
 
 void addTask() {
-    if (taskCount >= MAX_TASKS) {
+    if (taskCount >= Max) {
         printf("List is full! Cannot add more tasks.\n");
         return;
     }
 
     printf("Enter task description: ");
    
-    fgets(todoList[taskCount].description, DESC_LENGTH, stdin);
+    fgets(todoList[taskCount].description, DESCLENGTH, stdin);
     
     
     todoList[taskCount].description[strcspn(todoList[taskCount].description, "\n")] = 0;
