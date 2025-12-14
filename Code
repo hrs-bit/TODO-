@@ -1,0 +1,152 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+#define MAX_TASKS 100
+#define DESC_LENGTH 100
+
+typedef struct {
+    int id;
+    char description[DESC_LENGTH];
+    int isCompleted; 
+} Task;
+
+Task todoList[MAX_TASKS];
+int taskCount = 0;
+
+
+void addTask();
+void viewTasks();
+void markCompleted();
+void deleteTask();
+void clearInputBuffer();
+
+int main() {
+    int choice;
+
+    while (1) {
+        printf("\n--- To-Do List Menu ---\n");
+        printf("1. Add Task\n");
+        printf("2. View Tasks\n");
+        printf("3. Mark Task as Completed\n");
+        printf("4. Delete Task\n");
+        printf("5. Exit\n");
+        printf("Enter your choice: ");
+        
+        if (scanf("%d", &choice) != 1) {
+            printf("Invalid input. Please enter a number.\n");
+            clearInputBuffer();
+            continue;
+        }
+        clearInputBuffer(); 
+
+        switch (choice) {
+            case 1: addTask(); break;
+            case 2: viewTasks(); break;
+            case 3: markCompleted(); break;
+            case 4: deleteTask(); break;
+            case 5: 
+                printf("Exiting... Goodbye!\n");
+                return 0;
+            default:
+                printf("Invalid choice. Please try again.\n");
+        }
+    }
+    return 0;
+}
+
+
+
+void addTask() {
+    if (taskCount >= MAX_TASKS) {
+        printf("List is full! Cannot add more tasks.\n");
+        return;
+    }
+
+    printf("Enter task description: ");
+   
+    fgets(todoList[taskCount].description, DESC_LENGTH, stdin);
+    
+    
+    todoList[taskCount].description[strcspn(todoList[taskCount].description, "\n")] = 0;
+
+    todoList[taskCount].id = taskCount + 1;
+    todoList[taskCount].isCompleted = 0; 
+    taskCount++;
+
+    printf("Task added successfully.\n");
+}
+
+void viewTasks() {
+    if (taskCount == 0) {
+        printf("Your To-Do list is empty.\n");
+        return;
+    }
+
+    printf("\nID\tStatus\t\tDescription\n");
+    printf("--------------------------------------------\n");
+    for (int i = 0; i < taskCount; i++) {
+        printf("%d\t[%c]\t\t%s\n", 
+            todoList[i].id, 
+            (todoList[i].isCompleted ? 'X' : ' '),
+            todoList[i].description);
+    }
+}
+
+void markCompleted() {
+    int id;
+    viewTasks(); 
+    if (taskCount == 0) return;
+
+    printf("\nEnter the ID of the task to mark complete: ");
+    scanf("%d", &id);
+    clearInputBuffer();
+
+    int found = 0;
+    for (int i = 0; i < taskCount; i++) {
+        if (todoList[i].id == id) {
+            todoList[i].isCompleted = 1;
+            printf("Task %d marked as completed.\n", id);
+            found = 1;
+            break;
+        }
+    }
+
+    if (!found) {
+        printf("Task with ID %d not found.\n", id);
+    }
+}
+
+void deleteTask() {
+    int id;
+    viewTasks();
+    if (taskCount == 0) return;
+
+    printf("\nEnter the ID of the task to delete: ");
+    scanf("%d", &id);
+    clearInputBuffer();
+
+    int found = 0;
+    for (int i = 0; i < taskCount; i++) {
+        if (todoList[i].id == id) {
+            found = 1;
+            for (int j = i; j < taskCount - 1; j++) {
+                todoList[j] = todoList[j + 1];
+                // Update IDs to keep them sequential (optional)
+                todoList[j].id = j + 1; 
+            }
+            taskCount--;
+            printf("Task deleted successfully.\n");
+            break;
+        }
+    }
+
+    if (!found) {
+        printf("Task with ID %d not found.\n", id);
+    }
+}
+
+void clearInputBuffer() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}
