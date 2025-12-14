@@ -1,4 +1,8 @@
 # TODO-
+
+*This project is only made using C programming language*
+Some of the technical object used inn it are :-
+
 1. The Building Blocks (struct and Array)
 typedef struct { ... } Task;: This defines a custom data type called Task. Think of it as a template that groups three things together for every single task:
 
